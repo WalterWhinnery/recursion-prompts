@@ -111,7 +111,7 @@ var sumBelow = function(n) {
   // i: number n
   // o: sum of numbers until n
   // ec: take negative numbers
-  // if zero
+  // base case of reaching zero
   if (n >= -1 && n <= 1) {
     return 0;
   }
@@ -175,7 +175,7 @@ var range = function(x, y) {
       return reverseRange;
     }
   } else {
-    // return empty array for care of edge case of no middle integers
+    // return empty array for care of base case of no middle integers
     return [];
   }
 };
@@ -190,7 +190,7 @@ var exponent = function(base, exp) {
   // i: two integers, base number and exponent (number of times you multiply number by itself)
   // o: result of number ^ exp
   // ec: no calls, handle 0, 1, and pos/neg numbers
-  // handle edge case of exp = 0 and return 1
+  // handle base case of exp = 0 and return 1
   if (exp === 0) {
     return 1;
   }
@@ -213,6 +213,7 @@ var exponent = function(base, exp) {
   // handle negative cases using 1 divided by a recursive call to a negative version of the exponent
   } else {
     return (1 / exponent(base, -(exp)));
+    console.log((1 / exponent(base, -(exp))))
   }
 };
 
@@ -221,6 +222,24 @@ var exponent = function(base, exp) {
 // powerOfTwo(16); // true
 // powerOfTwo(10); // false
 var powerOfTwo = function(n) {
+  // i: integer
+  // o: boolean based on if power of 2
+  // ec: numbers smaller and larger than 2, no negative numbers
+  // base case of 2 power of itself
+  // handle numbers smaller and larger than 2
+  // base case of n === 2
+  if (n === 2) {
+    return true
+  // if number larger or = than nearest multiple of 2 subtact next power from current
+  } else if (n >= 4) {
+    return powerOfTwo((n - n / 2));
+  // handle nearest lower 1 and fractions that are power of 2, multiply by 2
+  } else if ((n <= 1) && (n > 0)) {
+    return powerOfTwo(n * 2);
+  // else false
+  } else {
+    return false;
+  }
 };
 
 // 9. Write a function that reverses a string.
