@@ -7,32 +7,179 @@
 // Example: 5! = 5 x 4 x 3 x 2 x 1 = 120
 // factorial(5); // 120
 var factorial = function(n) {
+  // i: variable n which should be a number
+  // o: factorial result of multiplying that number by one less until 1
+  // ec: neg numbers and non-numbers return null
+  // handle non-number edge cases
+  if (typeof n !== 'number') {
+    return null;
+  }
+  // handle non-positive numbers
+  if (n < 0) {
+    return null;
+  }
+  // handle 0
+  if (n === 0) {
+    return 1;
+  }
+  // recursive loop: return n * factorial call for n - 1. Limit of zero already established by prior statement
+  return (n * factorial(n - 1));
+
 };
 
 // 2. Compute the sum of an array of integers.
 // sum([1,2,3,4,5,6]); // 21
 var sum = function(array) {
+  // i: variable-length array of positive and/or negative numbers
+  // o: sum of those numbers
+  // ec: subtract negative numbers from sum, empty array returns 0
+  // edge case of empty arr
+  if (array.length === 0) {
+    return 0;
+  }
+  // base case of single item array
+  if (array.length === 1) {
+    // returns value at index 0, positive or negative
+    return array[0];
+  }
+  if (array.length > 1) {
+    // adds value of index 0 to recursive call for array[0] by slicing first number off until length === 1
+    return array[0] + sum(array.slice(1));
+  }
 };
 
 // 3. Sum all numbers in an array containing nested arrays.
 // arraySum([1,[2,3],[[4]],5]); // 15
 var arraySum = function(array) {
+  // i: array of arrays
+  // o: sum of all elements in all arrays
+  // ec: negative numbers, empty arrays, do NOT mutate array
+
+  // deal with edge case of empty array
+  if (array.length === 0) {
+    return 0;
+  }
+  // if: define base case of array.length === 1 && array[0] not an array
+  if (array.length === 1) {
+    // check if array
+    if (Array.isArray(array[0])) {
+      // returns sum on inner array
+      var sum = 0;
+      for (var i = 0; i < array[0].length; i++) {
+        var curIndex = parseInt(array[0][i]);
+        sum += curIndex;
+      }
+      return sum;
+    // else return array[0]
+    }
+    return array[0];
+  }
+  // if: length longer than 1 and array[0] is an array
+  if (Array.isArray[array[0]]) {
+    // returns sum of inner array
+    var sum = 0;
+    for (var i = 0; i < array[0].length; i++) {
+      var curIndex = parseInt(array[0][i]);
+      sum += curIndex;
+    }
+    return sum + arraySum(array.slice(1));
+  }
+
+  // if not array, add array[0] value to sum(array.slice(1))
+  return (array[0] + arraySum(array.slice(1)));
 };
 
 // 4. Check if a number is even.
 var isEven = function(n) {
+  // i: single integer value pos or neg
+  // o: boolean true if even, false if odd
+  // ec: work with negative numbers, use recursion
+  // get absolute value of n
+  n = Math.abs(n);
+  // check if n is greater than 1, call isEven on (n - 2)
+  if (n > 1) {
+    return isEven(n - 2);
+  }
+  // if odd, n === 1, return false, if even, n === 0, returns true
+  return n === 0;
 };
 
 // 5. Sum all integers below a given integer.
 // sumBelow(10); // 45
 // sumBelow(7); // 21
 var sumBelow = function(n) {
+  // i: number n
+  // o: sum of numbers until n
+  // ec: take negative numbers
+  // if zero
+  if (n >= -1 && n <= 1) {
+    return 0;
+  }
+  // determine if positive or negative and if at the minimum cutoff for results !== 0
+  if (n === 2) {
+    // return n - 1
+    n = n - 1;
+    return n
+  // if n > 2
+  } else if (n > 2) {
+    // subtract one from n
+    // return n + sumBelow(n - 1)
+    n = n - 1;
+    return (n + sumBelow(n));
+  // if n equal to -1
+  } else if (n === -2) {
+    n = n + 1;
+    // return n
+    return n;
+  // if n < -1
+  } else {
+    // add one to n
+    // return n - sumBelow(n + 1)
+    n = n + 1
+    return (n + sumBelow(n));
+  }
 };
 
 // 6. Get the integers within a range (x, y).
 // range(2,9); // [3,4,5,6,7,8]
 var range = function(x, y) {
+  // i: two number inputs
+  // o: array of integers between the two
+  // ec: x === y empty array, should work if x > y
+  // normal order and has middle numbers
+  if ((x < y) && ((y - x) > 1)) {
+    // if only one middle number
+    if ((y - x) === 2) {
+      return [x + 1];
+    // if multiple
+    } else {
+      // recursive call to array built above during the final recursive call
+      var arrRange = range(x, (y - 1));
+      // push last middle number (reverse order so built inside out)
+      arrRange.push(y - 1);
+      // return completed array
+      return arrRange;
+    }
+  // if inverted input order and has middle numbers
+  }
+  if ((x > y) && ((x - y) > 1)) {
+    // if only one middle number remaining
+    if (x - y === 2) {
+      // subtract since all middle numbers are less than x
+      return [x - 1];
+    } else {
+      // recursive call for array built above, shrinking from end
+      var reverseRange = range(x, (y + 1));
+      // push last number first
+      reverseRange.push(y + 1);
+      return reverseRange;
+    }
+  } else {
+    // return empty array for care of edge case of no middle integers
+    return [];
+  }
 };
+
 
 // 7. Compute the exponent of a number.
 // The exponent of a number says how many times the base number is used as a factor.
@@ -40,6 +187,33 @@ var range = function(x, y) {
 // exponent(4,3); // 64
 // https://www.khanacademy.org/computing/computer-science/algorithms/recursive-algorithms/a/computing-powers-of-a-number
 var exponent = function(base, exp) {
+  // i: two integers, base number and exponent (number of times you multiply number by itself)
+  // o: result of number ^ exp
+  // ec: no calls, handle 0, 1, and pos/neg numbers
+  // handle edge case of exp = 0 and return 1
+  if (exp === 0) {
+    return 1;
+  }
+  // handle even cases with recursive division of the exponent
+  if ((exp % 2 === 0) && (exp > 0)) {
+    if (exp === 2) {
+      // return base mult by itself (4)
+      return base * base;
+    } else {
+      // return base multiplied by 2 multiplied by recursive call to function with exponent divided by 2
+      return ((base * base) * exponent(base, (exp / 2))); // 16
+    }
+  // handle odd cases with recursive subtraction from the exponent
+  } else if ((exp % 2 === 1) && (exp > 0)) {
+    if (exp === 1) {
+      return base // 2
+    } else {
+      return (base * (exponent(base, exp - 1))); // 8
+    }
+  // handle negative cases using 1 divided by a recursive call to a negative version of the exponent
+  } else {
+    return (1 / exponent(base, -(exp)));
+  }
 };
 
 // 8. Determine if a number is a power of two.
